@@ -13,13 +13,13 @@ def separate_audio(
     overlap=0.25,
     no_split=False,
     segment=None,
-    two_stems=None,
+    two_stems="vocals",
     int24=False,
     float32=False,
     clip_mode="rescale",
     flac=False,
     mp3=False,
-    mp3_bitrate=320,
+    mp3_bitrate=256,
     mp3_preset=2,
     filename=None,
     jobs=1,
@@ -127,7 +127,7 @@ def main():
     parser.add_argument("--overlap", type=float, default=0.25, help="分割之间的重叠")
     parser.add_argument("--no-split", action="store_true", help="不将音频分成块处理，可能会占用大量内存")
     parser.add_argument("--segment", type=float, help="设置每个块的分割大小，可以帮助节省显卡内存")
-    parser.add_argument("--two-stems", help="仅分离为两个声部 (例如 vocals)")
+    parser.add_argument("--two-stems", default="vocals", help="仅分离为两个声部 (例如 vocals)")
     parser.add_argument("--int24", action="store_true", help="将WAV输出保存为24位")
     parser.add_argument("--float32", action="store_true", help="将WAV输出保存为float32格式 (文件大小增加2倍)")
     parser.add_argument("--clip-mode", choices=["rescale", "clamp"], default="rescale", 

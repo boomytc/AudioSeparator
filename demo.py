@@ -68,10 +68,15 @@ def separate_audio(
         cmd.extend(["--segment", str(segment)])
     if clip_mode:
         cmd.extend(["--clip-mode", clip_mode])
-    if mp3_bitrate:
-        cmd.extend(["--mp3-bitrate", str(mp3_bitrate)])
-    if mp3_preset:
-        cmd.extend(["--mp3-preset", str(mp3_preset)])
+    
+    # 如果指定了MP3相关参数，自动添加--mp3选项
+    if mp3_bitrate or mp3_preset:
+        cmd.append("--mp3")
+        if mp3_bitrate:
+            cmd.extend(["--mp3-bitrate", str(mp3_bitrate)])
+        if mp3_preset:
+            cmd.extend(["--mp3-preset", str(mp3_preset)])
+    
     if filename:
         cmd.extend(["--filename", filename])
     if verbose:

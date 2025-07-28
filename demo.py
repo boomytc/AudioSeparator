@@ -1,14 +1,14 @@
 import os
-from pickle import TRUE
 import subprocess
 import argparse
 import time
+import sys
 
 def separate_audio(
     track_path,
     output_dir="separated",
     model_name="htdemucs",
-    device="cuda",
+    device="cpu",
     shifts=8,
     overlap=0.5,
     no_split=False,
@@ -43,7 +43,7 @@ def separate_audio(
         verbose: 显示详细输出
     """
     # 构建命令
-    cmd = ["demucs"]
+    cmd = [sys.executable, "-m", "demucs"]
     
     # 添加基本参数
     if model_name:
@@ -107,7 +107,7 @@ def main():
     parser.add_argument("track", help="要分离的音频文件路径")
     parser.add_argument("-o", "--output", default="separated", help="输出目录")
     parser.add_argument("-n", "--model", default="htdemucs", help="预训练模型名称")
-    parser.add_argument("-d", "--device", default="cuda", choices=["cuda", "cpu"], help="使用的设备")
+    parser.add_argument("-d", "--device", default="cpu", choices=["cuda", "cpu", "mps"], help="使用的设备")
     parser.add_argument("--shifts", type=int, default=8, help="随机移位数量，增加质量但需要更多时间")
     parser.add_argument("--overlap", type=float, default=0.5, help="分割之间的重叠")
     parser.add_argument("--no-split", action="store_true", help="不将音频分成块处理，可能会占用大量内存")
@@ -118,7 +118,7 @@ def main():
     parser.add_argument("--mp3-preset", type=int, default=2, choices=[2,3,4,5,6,7], help="MP3编码器预设，2为最高质量，7为最快速度")
     parser.add_argument("--filename", default="{track}_{stem}.{ext}",help="设置输出文件名，支持变量 原文件名{track}、原文件扩展名{trackext}、分离声部{stem}、输出文件扩展名{ext}")
     parser.add_argument("-j", "--jobs", type=int, default=0, help="并行作业数 (0表示自动选择最佳值，通常为CPU核心数)")
-    parser.add_argument("-v", "--verbose", default=True, action="store_true", help="显示详细输出")
+    parser.add_argument("-v", "--verbose", action="store_true", help="显示详细输出")
     
     args = parser.parse_args()
     

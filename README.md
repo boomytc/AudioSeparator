@@ -2,7 +2,7 @@
 
 ## 简介
 
-本项目是一个基于 [Demucs](https://github.com/facebookresearch/demucs) 的音频分离工具，可以将音频文件分离为人声、鼓、贝斯和其他乐器等不同声部。
+本项目是一个基于 [Demucs](https://github.com/adefossez/demucs) 的音频分离工具，可以将音频文件分离为人声、鼓、贝斯和其他乐器等不同声部。
 
 ## 功能特点
 
@@ -22,6 +22,11 @@ pip install -r requirements.txt
 # 或者直接安装demucs
 pip install demucs
 ```
+
+### 针对不同系统
+Windows: [Windows support](https://github.com/adefossez/demucs/blob/main/docs/windows.md).
+MacOS: [MacOS support](https://github.com/adefossez/demucs/blob/main/docs/mac.md).
+Linux: [Linux support](https://github.com/adefossez/demucs/blob/main/docs/linux.md).
 
 ## 使用方法
 
@@ -132,4 +137,4 @@ python demo.py path/to/audio.mp3 --flac
 
 ## 致谢
 
-本项目基于Facebook Research的[Demucs](https://github.com/facebookresearch/demucs)模型。
+本项目基于[Demucs](https://github.com/adefossez/demucs)模型。

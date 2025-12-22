@@ -8,10 +8,10 @@
 
 - 支持多种预训练模型
 - 支持多种音频格式（WAV、MP3、FLAC、OGG等）
-- 可以选择输出为WAV、MP3或FLAC格式
+- 可以选择输出为 WAV 或 MP3 格式
 - 提供多种参数调整分离质量和性能
-- 支持批量处理多个音频文件
-- 支持使用GPU加速（如果可用）
+- 支持使用 GPU/MPS 加速（如果可用）
+- 支持自定义输出文件名格式
 
 ## 环境安装
 
@@ -45,11 +45,11 @@ python demo.py path/to/audio.mp3
 # 指定输出目录
 python demo.py path/to/audio.mp3 -o output_folder
 
-# 使用CPU处理
-python demo.py path/to/audio.mp3 -d cpu
+# 使用 MPS 加速 (Mac M1/M2)
+python demo.py path/to/audio.mp3 -d mps
 
-# 转换为MP3格式输出
-python demo.py path/to/audio.mp3 --mp3
+# 设置 MP3 比特率 (自动输出为 MP3)
+python demo.py path/to/audio.mp3 --mp3-bitrate 320
 
 # 只分离人声和伴奏
 python demo.py path/to/audio.mp3 --two-stems vocals
@@ -61,14 +61,14 @@ python demo.py path/to/audio.mp3 --two-stems vocals
 # 使用更多随机移位提高质量
 python demo.py path/to/audio.mp3 --shifts 10
 
-# 使用多核处理加速
+# 使用多核处理加速 (0 为自动)
 python demo.py path/to/audio.mp3 -j 4
 
 # 设置分段大小以节省显存
 python demo.py path/to/audio.mp3 --segment 10
 
-# 输出为高质量FLAC格式
-python demo.py path/to/audio.mp3 --flac
+# 自定义输出文件名格式
+python demo.py path/to/audio.mp3 --filename "{track}_{stem}.{ext}"
 ```
 
 ## 参数说明
@@ -80,23 +80,17 @@ python demo.py path/to/audio.mp3 --flac
 | `track` | 要分离的音频文件路径 |
 | `-o, --output` | 输出目录，默认为"separated" |
 | `-n, --model` | 预训练模型名称，默认为"htdemucs" |
-| `-s, --signature` | 本地训练的XP签名 |
-| `--repo` | 包含所有预训练模型的文件夹 |
-| `-d, --device` | 使用的设备，可选"cuda"或"cpu"，默认为"cuda" |
-| `--shifts` | 随机移位数量，增加质量但需要更多时间，默认为5 |
-| `--overlap` | 分割之间的重叠，默认为0.25 |
+| `-d, --device` | 使用的设备，可选"cuda"、"cpu"或"mps"，默认为"cpu" |
+| `--shifts` | 随机移位数量，增加质量但需要更多时间，默认为8 |
+| `--overlap` | 分割之间的重叠，默认为0.5 |
 | `--no-split` | 不将音频分成块处理，可能会占用大量内存 |
-| `--segment` | 设置每个块的分割大小，可以帮助节省显卡内存 |
-| `--two-stems` | 仅分离为两个声部，如"vocals"将分离为vocals和no_vocals |
-| `--int24` | 将WAV输出保存为24位 |
-| `--float32` | 将WAV输出保存为float32格式（文件大小增加2倍） |
+| `--segment` | 设置每个块的分割大小，可以帮助节省显卡内存，默认为7 |
+| `--two-stems` | 仅分离为两个声部，如"vocals"将分离为vocals和no_vocals，默认为"vocals" |
 | `--clip-mode` | 避免削波的策略：rescale（必要时缩放整个信号）或clamp（硬削波），默认为"rescale" |
-| `--flac` | 将输出WAV转换为FLAC格式 |
-| `--mp3` | 将输出转换为MP3格式 |
-| `--mp3-bitrate` | MP3转换的比特率，默认为320 |
+| `--mp3-bitrate` | MP3转换的比特率，默认为256 |
 | `--mp3-preset` | MP3编码器预设，2为最高质量，7为最快速度，默认为2 |
-| `--filename` | 设置输出文件名，支持变量{track}、{trackext}、{stem}、{ext} |
-| `-j, --jobs` | 并行作业数，增加内存使用但多核处理更快，默认为1 |
+| `--filename` | 设置输出文件名，支持变量{track}、{trackext}、{stem}、{ext}，默认为"{track}_{stem}.{ext}" |
+| `-j, --jobs` | 并行作业数，0表示自动选择最佳值，默认为0 |
 | `-v, --verbose` | 显示详细输出 |
 
 ## 预训练模型
